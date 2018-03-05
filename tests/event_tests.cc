@@ -69,6 +69,4 @@ TEST_CASE("Event test", "[events]") {
     REQUIRE(i == 10);
   }
 
-
-
 }

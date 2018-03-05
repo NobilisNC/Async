@@ -13,16 +13,16 @@ class thread
   thread() : run_(false) {}
   virtual ~thread() {
     run_ = false;
-    if (thread_)
-      thread_->join();
+    if (thread_->joinable())
+        thread_->join();
   }
 
-  void start() {
+  virtual void start() {
     run_ = true;
     thread_.reset(new std::thread(&thread::loop_, this));
   }
 
-  void stop() {
+  virtual void stop() {
     if(thread_) {
       run_ = false;
       thread_->join();
