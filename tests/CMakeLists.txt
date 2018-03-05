@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+project(tests VERSION 1.0.0 LANGUAGES CXX)
+
+add_executable(
+  main_tests
+    main.cc
+    general_tests.cc
+    signal_tests.cc
+    event_tests.cc
+)
+
+target_link_libraries(
+  main_tests
+
+    PUBLIC
+      deps::catch2
+      async
+)
+
+add_test(NAME tests::main COMMAND main_tests)
