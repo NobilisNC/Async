@@ -11,6 +11,7 @@ class box : public thread
 {
   public :
     using queue_type = queue<T>;
+    using event_type = typename queue_type::value_type;
 
     explicit box(queue_type& queue) : queue_(queue) {}
     ~box() = default;
@@ -28,7 +29,11 @@ class box : public thread
 
     typename queue_type::value_type waitEvent() {
       std::unique_lock<std::mutex> lk(queue_.mutex());
-      queue_.condition_variable().wait(lk);
+      queue_.condition_variable().wait(lk, [this](){
+          if (needtoStop())
+            std::cerr << "NEED TO STOP" << std::endl;
+          return !queue_.isEmpty() || needtoStop();
+        });
 
       if(!queue_.isEmpty())
         return queue_.pop();

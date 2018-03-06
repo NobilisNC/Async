@@ -12,7 +12,7 @@ namespace async {
   template<typename value_t>
   class queue
   {
-    using queue_t =  std::queue<value_t>;
+    using queue_t = std::queue<value_t>;
 
     public :
       using value_type = value_t;
@@ -33,12 +33,15 @@ namespace async {
       void push(const value_t& value) {
         std::lock_guard<std::mutex> lguard(queue_mutex_);
         queue_.push(value);
+
+        std::lock_guard<std::mutex> lguardcv(cv_mutex_);
         cv_.notify_one();
       }
 
       void push(value_t&& value) {
         std::lock_guard<std::mutex> lguard(queue_mutex_);
         queue_.push(std::forward<value_t>(value));
+        std::lock_guard<std::mutex> lguardcv(cv_mutex_);
         cv_.notify_one();
       }
 
