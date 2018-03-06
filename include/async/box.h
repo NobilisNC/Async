@@ -27,11 +27,9 @@ class box : public thread
     virtual void loop() = 0;
     virtual void onEnd() {}
 
-    typename queue_type::value_type waitEvent() {
+    event_type waitEvent() {
       std::unique_lock<std::mutex> lk(queue_.mutex());
       queue_.condition_variable().wait(lk, [this](){
-          if (needtoStop())
-            std::cerr << "NEED TO STOP" << std::endl;
           return !queue_.isEmpty() || needtoStop();
         });
 

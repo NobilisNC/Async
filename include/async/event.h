@@ -51,6 +51,33 @@ struct async_declare_event_family {
       return static_cast<event<value_t>* >(val);
     }
 
+    template<T value_t>
+    constexpr static auto cast(std::unique_ptr<base>& val) {
+      return static_cast<event<value_t>* >(val.get());
+    }
+};
+
+template<typename T>
+struct async_get_event_type { //Default any type
+  using type = async::_event<T>;
+  using enum_type =  T;
+};
+
+template<typename T>
+struct async_get_event_type<async::_event<T>> { // event_type
+  using type = async::_event<T>;
+  using enum_type = decltype(T);
+};
+
+template<typename T>
+struct async_get_event_type<async_declare_event_family<T>> { // async_declare_event_family
+  using type = async::_event<T>;
+  using enum_type =  T;
+};
+
+template<typename T>
+struct async_get_enum_type { // async_declare_event_family
+  using type = typename async_get_event_type<T>::type;
 };
 
 #endif

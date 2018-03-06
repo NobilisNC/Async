@@ -32,6 +32,7 @@ class thread
   protected:
     virtual void run() = 0;
     inline bool needtoStop() const { return !run_; }
+    inline void innerStop()  { run_ = false; }
 
   private:
   inline void loop_() {

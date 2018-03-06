@@ -8,7 +8,8 @@ add_executable(
     signal_tests.cc
     event_tests.cc
     #box_tests.cc
-    event_loop.cc
+    #event_loop.cc
+    sequence_loop_tests.cc
 )
 
 target_link_libraries(
