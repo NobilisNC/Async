@@ -3,7 +3,14 @@
 #include <sstream>
 #include <chrono>
 #include <ctime>
-#include <async/box.h>
+#include <async/consummer_thread.h>
+
+enum class Test { A, B};
+
+using TEST = async_dev::register_family<Test>;
+
+template<>
+struct async_dev::event<Test::A> {};
 
 enum class Action {
   SayHello,
@@ -24,11 +31,11 @@ async_declare_event(ActionEvent, Action::Count) {
   int i;
 };
 
-class ActionBox : public async::box<ActionEvent>
+class ActionBox : public async::consummer_thread<ActionEvent>
 {
   public :
     int counter = 0;
-    explicit ActionBox(queue_type& queue, std::string name) : box(queue), name_(name) {}
+    explicit ActionBox(queue_type& queue, std::string name) : consummer_thread(queue), name_(name) {}
 
   protected :
     void onStart() override {

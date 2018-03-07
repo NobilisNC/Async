@@ -80,4 +80,24 @@ struct async_get_enum_type { // async_declare_event_family
     using type = typename async_get_event_type<T>::type;
 };
 
+namespace async_dev {
+
+template<typename T, T t>
+struct event {
+
+};
+
+template<typename T, T t>
+struct event {
+    event() : id_(t) {}
+
+    T id_;
+};
+
+template<typename T>
+using register_family = event<T>;
+
+}
+
+
 #endif

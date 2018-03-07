@@ -1,17 +1,17 @@
 #ifndef _ASYNC_EVENTLOOP_H
 #define _ASYNC_EVENTLOOP_H
 
-#include "box.h"
+#include "consummer_thread.h"
 
 namespace async {
 
 template<class T>
-class event_loop : public box<T>
+class event_loop : public consummer_thread<T>
 {
   public:
-    using queue_type = typename box::queue_type;
-    using event_type = typename box::event_type;
-    event_loop() : box(queue_) {}
+    using queue_type = typename consummer_thread::queue_type;
+    using event_type = typename consummer_thread::event_type;
+    event_loop() : consummer_thread(queue_) {}
 
     inline void push(event_type&& event) {
       queue_.push(std::forward<event_type>(event));

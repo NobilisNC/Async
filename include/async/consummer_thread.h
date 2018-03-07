@@ -7,14 +7,14 @@
 namespace async {
 
 template<typename T>
-class box : public thread
+class consummer_thread : public thread
 {
   public :
     using queue_type = queue<T>;
     using event_type = typename queue_type::value_type;
 
-    explicit box(queue_type& queue) : queue_(queue) {}
-    ~box() = default;
+    explicit consummer_thread(queue_type& queue) : queue_(queue) {}
+    ~consummer_thread() = default;
 
     void stop() override {
       queue_.condition_variable().notify_all();
