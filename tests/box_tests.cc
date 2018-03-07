@@ -9,8 +9,7 @@ enum class Test { A, B};
 
 using TEST = async_dev::register_family<Test>;
 
-template<>
-struct async_dev::event<Test::A> {};
+
 
 enum class Action {
   SayHello,
