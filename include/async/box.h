@@ -28,10 +28,12 @@ class box : public thread
     virtual void onEnd() {}
 
     event_type waitEvent() {
-      std::unique_lock<std::mutex> lk(queue_.mutex());
-      queue_.condition_variable().wait(lk, [this](){
-          return !queue_.isEmpty() || needtoStop();
-        });
+      {
+        std::unique_lock<std::mutex> lk(queue_.mutex());
+        queue_.condition_variable().wait(lk , [this](){
+            return !queue_.isEmpty() || needtoStop();
+          });
+      }
 
       if(!queue_.isEmpty())
         return queue_.pop();
@@ -43,12 +45,12 @@ class box : public thread
 
   private:
     void run() override {
-        onStart();
+      onStart();
 
-        while(!needtoStop())
-          loop();
+      while(!needtoStop())
+        loop();
 
-        onEnd();
+      onEnd();
     }
 
   private :

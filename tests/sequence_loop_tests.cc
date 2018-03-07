@@ -52,71 +52,74 @@ class SL : public async::sequence_loop<FCom>
   protected:
     void loop() override {
 
-        std::unique_ptr<FCom::base> event(waitFor(Command::PRINT_1));
-        if (!event) return;
+      std::unique_ptr<FCom::base> event(waitFor(Command::PRINT_1));
+      if (!event) return;
 
-        c[0] = FCom::cast<Command::PRINT_1>(event)->letter;
+      c[0] = FCom::cast<Command::PRINT_1>(event)->letter;
 
-        event.reset( waitFor(Command::PRINT_2) );
-        if (!event) return;
+      event.reset( waitFor(Command::PRINT_2) );
+      if (!event) return;
 
-        c[1] = FCom::cast<Command::PRINT_2>(event)->letter;
+      c[1] = FCom::cast<Command::PRINT_2>(event)->letter;
 
-        event.reset( waitFor(Command::PRINT_3) );
-        if (!event) return;
+      event.reset( waitFor(Command::PRINT_3) );
+      if (!event) return;
 
-        c[2] = FCom::cast<Command::PRINT_3>(event)->letter;
+      c[2] = FCom::cast<Command::PRINT_3>(event)->letter;
 
-        event.reset( waitFor(Command::PRINT_4) );
-        if (!event) return;
+      event.reset( waitFor(Command::PRINT_4) );
+      if (!event) return;
 
-        c[3] = FCom::cast<Command::PRINT_4>(event)->letter;
+      c[3] = FCom::cast<Command::PRINT_4>(event)->letter;
 
-        event.reset( waitFor(Command::PRINT_5) );
-        if (!event) return;
+      event.reset( waitFor(Command::PRINT_5) );
+      if (!event) return;
 
-        c[4] = FCom::cast<Command::PRINT_5>(event)->letter;
-        c[5] = '\0';
+      c[4] = FCom::cast<Command::PRINT_5>(event)->letter;
+      c[5] = '\0';
 
     }
 };
 
 TEST_CASE("Sequence Loop") {
-    SL loop;
+  std::cerr << std::endl
+            << "==== TEST CASE [sequence_loop] ===" << std::endl
+            << std::endl;
+  SL loop;
 
-    loop.start();
-    for(int i = 0; i < 4; ++i) {
+  loop.start();
+  for(int i = 0; i < 4; ++i) {
       std::this_thread::sleep_for(std::chrono::seconds(1));
       REQUIRE(loop.isWaitingFor() == Command::PRINT_1);
       std::cerr << "Waiting " << i+1 << " ";
     } std::cerr << std::endl;
 
-    loop.push(new FCom::event<Command::PRINT_1>('a'));
-    loop.push(new FCom::event<Command::PRINT_1>('a'));
-    loop.push(new FCom::event<Command::PRINT_1>('a'));
+  loop.push(new FCom::event<Command::PRINT_1>('a'));
+  loop.push(new FCom::event<Command::PRINT_1>('a'));
+  loop.push(new FCom::event<Command::PRINT_1>('a'));
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    REQUIRE(loop.isWaitingFor() == Command::PRINT_2);
+  REQUIRE(loop.isWaitingFor() == Command::PRINT_2);
 
-    loop.push(new FCom::event<Command::PRINT_3>('x'));
-    loop.push(new FCom::event<Command::PRINT_2>('b'));
-    loop.push(new FCom::event<Command::PRINT_3>('c'));
+  loop.push(new FCom::event<Command::PRINT_3>('x'));
+  loop.push(new FCom::event<Command::PRINT_2>('b'));
+  loop.push(new FCom::event<Command::PRINT_3>('c'));
 
-    loop.push(new FCom::event<Command::PRINT_5>('a'));
-    loop.push(new FCom::event<Command::PRINT_4>('d'));
+  loop.push(new FCom::event<Command::PRINT_5>('a'));
+  loop.push(new FCom::event<Command::PRINT_4>('d'));
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    loop.push(new FCom::event<Command::PRINT_5>('e'));
+  loop.push(new FCom::event<Command::PRINT_5>('e'));
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    REQUIRE(std::string(loop.c) == "abcde");
-
-
+  REQUIRE(std::string(loop.c) == "abcde");
 
 
-    loop.stop();
+
+
+  loop.stop();
 }
 

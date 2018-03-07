@@ -8,7 +8,7 @@ namespace async {
 template<typename Id>
 class _event
 {
-  static_assert(std::is_enum<Id>::value, "ID type must be an enum type");
+    static_assert(std::is_enum<Id>::value, "ID type must be an enum type");
 
   public :
     _event(Id id) : id_(id) {}
@@ -59,25 +59,25 @@ struct async_declare_event_family {
 
 template<typename T>
 struct async_get_event_type { //Default any type
-  using type = async::_event<T>;
-  using enum_type =  T;
+    using type = async::_event<T>;
+    using enum_type =  T;
 };
 
 template<typename T>
 struct async_get_event_type<async::_event<T>> { // event_type
-  using type = async::_event<T>;
-  using enum_type = decltype(T);
+    using type = async::_event<T>;
+    using enum_type = decltype(T);
 };
 
 template<typename T>
 struct async_get_event_type<async_declare_event_family<T>> { // async_declare_event_family
-  using type = async::_event<T>;
-  using enum_type =  T;
+    using type = async::_event<T>;
+    using enum_type =  T;
 };
 
 template<typename T>
 struct async_get_enum_type { // async_declare_event_family
-  using type = typename async_get_event_type<T>::type;
+    using type = typename async_get_event_type<T>::type;
 };
 
 #endif

@@ -53,6 +53,10 @@ class Loop : public async::event_loop<ActionF>
 
 
 TEST_CASE("test event_loop") {
+  std::cerr << std::endl
+            << "==== TEST CASE [event_loop] ===" << std::endl
+            << std::endl;
+
   Loop l;
   l.start();
 
@@ -69,7 +73,7 @@ TEST_CASE("test event_loop") {
       std::cerr << "I will sleep for 5 seconds" << std::endl;
       for (int i = 0; i < 5; i++) {
           std::cerr << i << ' ';
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+          std::this_thread::sleep_for(std::chrono::seconds(1));
         }
 
       std::cerr << "Im wake up ;)" << std::endl;

@@ -27,46 +27,49 @@ async_declare_event(ActionEvent, Action::Count) {
 class ActionBox : public async::box<ActionEvent>
 {
   public :
+    int counter = 0;
     explicit ActionBox(queue_type& queue, std::string name) : box(queue), name_(name) {}
 
   protected :
     void onStart() override {
-      std::cerr << "Hello, I'm Box " << name_ << " and I'm starting" << std::endl;
+      //std::cerr << "Hello, I'm Box " << name_ << " and I'm starting" << std::endl;
     }
     void loop() override
     {
 
-        std::unique_ptr<ActionEvent::base> event(waitEvent());
-        //std::cerr << "[" << name_ << "] - I received event  : " << (int)event.get() << std::endl;
-        if(!event) return;
+      std::unique_ptr<ActionEvent::base> event(waitEvent());
+      //std::cerr << "[" << name_ << "] - I received event  : " << (int)event.get() << std::endl;
+      if(!event) return;
 
-        if (event->id() == Action::SayHello) {
-            auto action = ActionEvent::cast<Action::SayHello>(event.get());
-            sayHello(*action);
-          } else if(event->id() == Action::Count) {
-            auto action = ActionEvent::cast<Action::Count>(event.get());
-            count(*action);
-          }
+      if (event->id() == Action::SayHello) {
+          auto action = ActionEvent::cast<Action::SayHello>(event.get());
+          sayHello(*action);
+        } else if(event->id() == Action::Count) {
+          auto action = ActionEvent::cast<Action::Count>(event.get());
+          count(*action);
+        }
 
 
     }
 
     void onEnd() override {
-      std::cerr << "I'm Box " << name_ << " and I'm stopping. Goodbye !" << std::endl;
+      //std::cerr << "I'm Box " << name_ << " and I'm stopping. Goodbye !" << std::endl;
     }
 
 
-    private :
+  private :
     void sayHello(const ActionEvent::event<Action::SayHello>& action) {
       std::cerr << "[" << name_ << "] - Hello " << action.name << std::endl;
     }
 
     void count(const ActionEvent::event<Action::Count>& action) {
       std::stringstream ss;
-      for ( int i = 0; i < action.i; i++)
+      for ( int i = 0; i < action.i; i++) {
           ss << i << ", ";
+          counter++;
+        }
 
-      std::cerr << "[" << name_ << "] - Counting until" << ss.str() << std::endl;
+      //std::cerr << "[" << name_ << "] - Counting until" << ss.str() << std::endl;
     }
 
 
@@ -76,24 +79,12 @@ class ActionBox : public async::box<ActionEvent>
 };
 
 
-std::string random_string( size_t length )
-{
-    auto randchar = []() -> char
-    {
-        const char charset[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-        const size_t max_index = (sizeof(charset) - 1);
-        return charset[ rand() % max_index ];
-    };
-    std::string str(length,0);
-    std::generate_n( str.begin(), length, randchar );
-    return str;
-}
-
 TEST_CASE("box") {
-  std::srand(std::time(nullptr));
+  std::cerr << std::endl
+            << "==== TEST CASE [box] ===" << std::endl
+            << std::endl;
+
+  std::srand((unsigned)std::time(nullptr));
   async::queue<ActionEvent> queue;
 
   queue.push(new ActionEvent::event<Action::Count>(80));
@@ -106,26 +97,13 @@ TEST_CASE("box") {
 
   for (int i = 0 ; i < 5; ++i) {
       std::this_thread::sleep_for(std::chrono::seconds(1));
-
-      int nr_event = rand() % 5;
-      std::cerr << "[MASTER] -- Generate " << nr_event << " events";
-
-      for (int o = 0; o < nr_event; ++o) {
-          if(rand() % 2 == 0) {
-              queue.push(new ActionEvent::event<Action::SayHello>(random_string(10)));
-            } else {
-              queue.push(new ActionEvent::event<Action::Count>(rand() % 1000));
-            }
-        }
-
-
+      queue.push(new ActionEvent::event<Action::SayHello>("You shoud see that 5 times {" + std::to_string(i+1) + "}"));
+      queue.push(new ActionEvent::event<Action::Count>(10));
     }
 
   box1.stop();
   box2.stop();
 
-
-
-
+  REQUIRE((box1.counter + box2.counter) == (80 + 10*5) );
 
 }

@@ -35,7 +35,7 @@ TEST_CASE("Signal tests", "[signal]") {
   SECTION("Connecting lambda") {
     sig signal;
     signal.connect([](std::ostream& out){
-        out << OUTPUT;
+      out << OUTPUT;
     });
 
     std::stringstream ss;
@@ -75,8 +75,8 @@ TEST_CASE("Signal tests", "[signal]") {
     sig signal;
     O o;
     signal.connect([&](std::ostream& x){
-        o.output(x);
-      });
+      o.output(x);
+    });
 
     std::stringstream ss;
     signal(ss);
@@ -130,7 +130,7 @@ TEST_CASE("Connection", "[signal]") {
       });
 
     auto c3 = signal.connect([](int& i) {
-           i += 3;
+        i += 3;
       });
 
     int i = 0;

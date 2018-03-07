@@ -19,10 +19,10 @@ class sequence_loop : public event_loop<T>
       waiting_for_ = enum_v;
 
       do {
-        event = waitEvent();
-        if(needtoStop()) return nullptr;
-        if(!event) continue;
-      } while(event->id() != enum_v);
+          event = waitEvent();
+          if(needtoStop()) return nullptr;
+          if(!event) continue;
+        } while(event->id() != enum_v);
 
       return event;
     }
@@ -34,7 +34,7 @@ class sequence_loop : public event_loop<T>
       onEnd();
     }
 
-    private:
+  private:
     std::atomic<enum_type> waiting_for_;
 };
 

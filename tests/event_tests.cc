@@ -12,33 +12,33 @@ enum class Direction {
 using EventDirection = async_declare_event_family<Direction>;
 
 async_declare_event(EventDirection, Direction::Up) {
-     event(int d1, int d2) : base(Direction::Up), data1(d1), data2(d2) {}
-    ~event() {}
+  event(int d1, int d2) : base(Direction::Up), data1(d1), data2(d2) {}
+  ~event() {}
 
-    int data1;
-    int data2;
+  int data1;
+  int data2;
 };
 
 async_declare_event(EventDirection, Direction::Right) {
-     event(int d) : base(Direction::Right), data(d) {}
-    ~event() {}
+  event(int d) : base(Direction::Right), data(d) {}
+  ~event() {}
 
-    int data;
+  int data;
 };
 
 async_declare_event(EventDirection, Direction::Down) {
-     event(int d5) : base(Direction::Down), data5(d5) {}
-    ~event() {}
+  event(int d5) : base(Direction::Down), data5(d5) {}
+  ~event() {}
 
-    int data5;
+  int data5;
 };
 
 async_declare_event(EventDirection, Direction::Left) {
-     event(int d8, double d90) : base(Direction::Left), data8(d8), data90(d90) {}
-    ~event() {}
+  event(int d8, double d90) : base(Direction::Left), data8(d8), data90(d90) {}
+  ~event() {}
 
-    int data8;
-    double data90;
+  int data8;
+  double data90;
 };
 
 
