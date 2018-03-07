@@ -5,14 +5,12 @@
 
 namespace async {
 
-template<typename T, typename S>
+template<typename T>
 class sequence_loop : public event_loop<T>
 {
   public:
-    using status_type = S;
     using enum_type = typename async_get_event_type<T>::enum_type;
 
-    inline status_type status() const { return status_; }
     inline enum_type isWaitingFor() const { return waiting_for_; }
 
   protected:
@@ -29,12 +27,15 @@ class sequence_loop : public event_loop<T>
       return event;
     }
 
-    inline void setStatus(status_type status) { status_ = status; }
-
-
   private:
+    void run() override {
+      onStart();
+      loop();
+      onEnd();
+    }
+
+    private:
     std::atomic<enum_type> waiting_for_;
-    std::atomic<status_type> status_;
 };
 
 

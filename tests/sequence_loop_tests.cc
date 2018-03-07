@@ -44,7 +44,7 @@ async_declare_event(FCom, Command::PRINT_5) {
   char letter;
 };
 
-class SL : public async::sequence_loop<FCom, Command>
+class SL : public async::sequence_loop<FCom>
 {
   public:
     char c[15];
@@ -78,7 +78,6 @@ class SL : public async::sequence_loop<FCom, Command>
         c[4] = FCom::cast<Command::PRINT_5>(event)->letter;
         c[5] = '\0';
 
-        innerStop();
     }
 };
 

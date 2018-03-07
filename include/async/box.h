@@ -41,7 +41,7 @@ class box : public thread
 
     inline queue_type& queue() { return queue_; }
 
-  private :
+  private:
     void run() override {
         onStart();
 
