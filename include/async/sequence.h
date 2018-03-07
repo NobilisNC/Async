@@ -6,7 +6,7 @@
 namespace async {
 
 template<typename T>
-class sequence_loop : public event_loop<T>
+class sequence : public event_loop<T>
 {
   public:
     using enum_type = typename async_get_event_type<T>::enum_type;
