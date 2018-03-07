@@ -1,6 +1,6 @@
 #include <catch.hpp>
 
-#include <async/sequence_loop.h>
+#include <async/sequence.h>
 #include <iostream>
 
 enum class Command
@@ -44,13 +44,13 @@ async_declare_event(FCom, Command::PRINT_5) {
   char letter;
 };
 
-class SL : public async::sequence_loop<FCom>
+class SL : public async::sequence<FCom>
 {
   public:
     char c[15];
 
   protected:
-    void loop() override {
+    void execute() override {
 
       std::unique_ptr<FCom::base> event(waitFor(Command::PRINT_1));
       if (!event) return;

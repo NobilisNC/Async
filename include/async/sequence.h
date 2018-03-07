@@ -27,12 +27,16 @@ class sequence : public event_loop<T>
       return event;
     }
 
+    virtual void execute() = 0;
+
   private:
     void run() override {
       onStart();
-      loop();
+      execute();
       onEnd();
     }
+
+    void loop() override final { /* no used in sequence */ }
 
   private:
     std::atomic<enum_type> waiting_for_;
