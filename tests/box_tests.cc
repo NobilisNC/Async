@@ -5,6 +5,14 @@
 #include <ctime>
 #include <async/consummer_thread.h>
 
+
+enum class Test { A, B};
+
+using TEST = async_dev::register_family<Test>;
+
+
+
+
 enum class Action {
   SayHello,
   Count

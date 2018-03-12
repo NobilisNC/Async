@@ -109,4 +109,30 @@ inline constexpr bool is_event_family_v = is_event_family<T>::value;
 
 
 
+namespace async_dev {
+
+template<typename T, T t>
+struct event {
+
+};
+
+template<typename T, T t>
+struct _event {
+    _event() : id_(t) {}
+
+    T id_;
+};
+
+template<typename T>
+struct event_family {
+    template<T value>
+    using event = _event<T, value>;
+};
+
+template<typename T>
+using register_family = event_family<T>;
+
+}
+
+
 #endif

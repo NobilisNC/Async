@@ -14,6 +14,7 @@ class event_loop : public consummer_thread<T>
 
     event_loop() : consummer_thread<T>(queue_) {}
 
+
     inline void push(event_type&& event) {
       queue_.push(std::forward<event_type>(event));
     }
