@@ -14,7 +14,9 @@ class _signal {};
 template<class Sig>
 class connection
 {
+  private:
     using signal = Sig;
+    friend signal;
 
     signal& signal_;
     size_t id_;
@@ -31,17 +33,20 @@ class connection
     void disconnect() {
       signal_.disconnect(id_);
     }
+
     void connect() {
       signal_.connect(id_);
     }
+
     void remove() {
       signal_.remove(id_);
     }
+
     bool isConnected() {
       return signal_.isConnected(id_);
     }
 
-    friend typename signal;
+
 };
 
 template<class R, class... Args>
@@ -59,7 +64,7 @@ class _signal<R(Args...)>
   using slot_type = std::function<R(Args...)>;
   /** Connection type */
   using connection_type = connection< class_t >;
-  friend class connection_type;
+  friend connection_type;
 
   private:
 

@@ -10,7 +10,7 @@ template<typename T>
 class box : public thread
 {
   public :
-    using queue_type = queue<T>;
+    using queue_type = async::queue<T>;
     using event_type = typename queue_type::value_type;
 
     explicit box(queue_type& queue) : queue_(queue) {}

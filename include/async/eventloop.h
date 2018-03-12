@@ -9,9 +9,9 @@ template<class T>
 class event_loop : public box<T>
 {
   public:
-    using queue_type = typename box::queue_type;
-    using event_type = typename box::event_type;
-    event_loop() : box(queue_) {}
+    using queue_type = typename box<T>::queue_type;
+    using event_type = typename box<T>::event_type;
+    event_loop() : box<T>(queue_) {}
 
     inline void push(event_type&& event) {
       queue_.push(std::forward<event_type>(event));

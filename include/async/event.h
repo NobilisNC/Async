@@ -25,7 +25,7 @@ _event<Id>::~_event() {}
 
 
 #define async_declare_event(family, enum_v) template<> template<> \
-  struct family ## ::event< enum_v > : public family ## :: base
+  struct family::event< enum_v > : public family::base
 
 
 } /* namespace async */
@@ -66,7 +66,7 @@ struct async_get_event_type { //Default any type
 template<typename T>
 struct async_get_event_type<async::_event<T>> { // event_type
     using type = async::_event<T>;
-    using enum_type = decltype(T);
+    using enum_type = T;
 };
 
 template<typename T>

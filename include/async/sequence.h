@@ -10,7 +10,7 @@ class sequence : public event_loop<T>
 {
   public:
     using enum_type = typename async_get_event_type<T>::enum_type;
-
+    using event_type = typename box<T>::event_type;
     inline enum_type isWaitingFor() const { return waiting_for_; }
 
   protected:
@@ -19,8 +19,8 @@ class sequence : public event_loop<T>
       waiting_for_ = enum_v;
 
       do {
-          event = waitEvent();
-          if(needtoStop()) return nullptr;
+          event = event_loop<T>::waitEvent();
+          if(thread::needtoStop()) return nullptr;
           if(!event) continue;
         } while(event->id() != enum_v);
 
@@ -31,9 +31,9 @@ class sequence : public event_loop<T>
 
   private:
     void run() override {
-      onStart();
+      this->onStart();
       execute();
-      onEnd();
+      this->onEnd();
     }
 
     void loop() override final { /* no used in sequence */ }

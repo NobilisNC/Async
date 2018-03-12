@@ -12,10 +12,16 @@ add_executable(
     sequence_loop_tests.cc
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+
+
 target_link_libraries(
   main_tests
 
     PUBLIC
+    Threads::Threads
       deps::catch2
       async
 )
