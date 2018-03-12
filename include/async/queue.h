@@ -52,6 +52,11 @@ class _queue
       }
     }
 
+    inline void clear() {
+        std::lock_guard<std::mutex> lguard(queue_mutex_);
+        queue_ = {};
+    }
+
     value_t pop() {
       std::lock_guard<std::mutex> lguard(queue_mutex_);
       value_t val = queue_.front();

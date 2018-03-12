@@ -23,6 +23,10 @@ class event_loop : public consummer_thread<T>
       queue_.push(event);
     }
 
+    inline void clear() {
+        queue_.clear();
+    }
+
     inline const queue_type& queue() const { return queue_; }
 
   private:

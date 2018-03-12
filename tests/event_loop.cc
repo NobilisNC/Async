@@ -81,10 +81,11 @@ TEST_CASE("test event_loop") {
       std::cerr << "Im wake up ;)" << std::endl;
     }));
 
-  l.push(new ActionF::event<Action::SayHello>("Tom2"));
+  l.push(new ActionF::event<Action::SayHello>("you will never see me"));
   l.push(new ActionF::event<Action::SayHello>("Tom3"));
   l.push(new ActionF::event<Action::SayHello>("Tom4"));
-
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    l.clear();
   while(!l.queue().isEmpty()) {
       //std::cerr << "Loop Queue : " << l.queue().size() << "   " << std::this_thread::get_id() << std::endl;
       std::this_thread::sleep_for(std::chrono::seconds(2));

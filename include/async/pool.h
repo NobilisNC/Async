@@ -51,6 +51,9 @@ class pool
     inline size_type number() const { return threads_.size(); }
 
     inline void push(event_type&& event) {queue_.push(event); }
+    inline void clear() {
+        queue_.clear();
+    }
     inline const queue_type& queue() const { return queue_; }
 
   private:
