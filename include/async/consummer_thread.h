@@ -7,14 +7,15 @@
 namespace async {
 
 template<typename T>
-class box : public thread
+class consummer_thread : public thread
 {
   public :
+    static_assert(is_event_family_v<T>, "Must be an event_family");
     using queue_type = async::queue<T>;
     using event_type = typename queue_type::value_type;
 
-    explicit box(queue_type& queue) : queue_(queue) {}
-    ~box() = default;
+    explicit consummer_thread(queue_type& queue) : queue_(queue) {}
+    ~consummer_thread() = default;
 
     void stop() override {
       queue_.condition_variable().notify_all();

@@ -9,8 +9,9 @@ template<typename T>
 class sequence : public event_loop<T>
 {
   public:
-    using enum_type = typename async_get_event_type<T>::enum_type;
-    using event_type = typename box<T>::event_type;
+    using enum_type  = typename T::enum_type;
+    using event_type = typename event_loop<T>::event_type;
+
     inline enum_type isWaitingFor() const { return waiting_for_; }
 
   protected:

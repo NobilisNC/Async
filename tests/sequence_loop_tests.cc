@@ -2,57 +2,65 @@
 
 #include <async/sequence.h>
 #include <iostream>
+namespace TEST {
+enum class Command {
+    PRINT_1,
+    PRINT_2,
+    PRINT_3,
+    PRINT_4,
+    PRINT_5
+};
 
-enum class Command
+using FCom = async_declare_event_family(Command);
+
+async_event(FCom, Command::PRINT_1)
 {
-  PRINT_1,
-  PRINT_2,
-  PRINT_3,
-  PRINT_4,
-  PRINT_5
-};
-
-using FCom = async_declare_event_family<Command>;
-
-async_declare_event(FCom, Command::PRINT_1) {
-  event(char l) : base(Command::PRINT_1), letter(l) {}
+  event(char l) : super(), letter(l) {}
 
   char letter;
 };
 
-async_declare_event(FCom, Command::PRINT_2) {
-  event(char l) : base(Command::PRINT_2), letter(l) {}
+async_event(FCom, Command::PRINT_2)
+{
+  event(char l) : super(), letter(l) {}
 
   char letter;
 };
 
-async_declare_event(FCom, Command::PRINT_3) {
-  event(char l) : base(Command::PRINT_3), letter(l) {}
+async_event(FCom, Command::PRINT_3)
+{
+  event(char l) : super(), letter(l) {}
 
   char letter;
 };
 
-async_declare_event(FCom, Command::PRINT_4) {
-  event(char l) : base(Command::PRINT_4), letter(l) {}
+async_event(FCom, Command::PRINT_4)
+{
+  event(char l) : super(), letter(l) {}
 
   char letter;
 };
 
-async_declare_event(FCom, Command::PRINT_5) {
-  event(char l) : base(Command::PRINT_5), letter(l) {}
+async_event(FCom, Command::PRINT_5)
+{
+  event(char l) : super(), letter(l) {}
 
   char letter;
 };
 
-class SL : public async::sequence<FCom>
+}
+
+class SL : public async::sequence<TEST::FCom>
 {
   public:
     char c[15];
 
   protected:
     void execute() override {
+      using TEST::FCom;
+      using TEST::Command ;
 
-      std::unique_ptr<FCom::base> event(waitFor(Command::PRINT_1));
+      std::unique_ptr<FCom::base_event> event(waitFor(Command::PRINT_1));
       if (!event) return;
 
       c[0] = FCom::cast<Command::PRINT_1>(event)->letter;
@@ -82,6 +90,8 @@ class SL : public async::sequence<FCom>
 };
 
 TEST_CASE("Sequence Loop") {
+  using TEST::Command ;
+  using TEST::FCom ;
   std::cerr << std::endl
             << "==== TEST CASE [sequence_loop] ===" << std::endl
             << std::endl;
@@ -94,7 +104,7 @@ TEST_CASE("Sequence Loop") {
       std::cerr << "Waiting " << i+1 << " ";
     } std::cerr << std::endl;
 
-  loop.push(new FCom::event<Command::PRINT_1>('a'));
+  loop.push(new FCom::event<TEST::Command::PRINT_1>('a'));
   loop.push(new FCom::event<Command::PRINT_1>('a'));
   loop.push(new FCom::event<Command::PRINT_1>('a'));
 

@@ -1,6 +1,6 @@
 file( GLOB APP_SOURCES *.cc)
 foreach( example_src ${APP_SOURCES} )
     get_filename_component( example_name ${example_src} NAME_WE )
-    add_executable( ${example_name} ${example_src} )
+    add_executable( ${example_name} ${example_src})
     target_link_libraries( ${example_name} PUBLIC async )
 endforeach( example_src ${APP_SOURCES} )

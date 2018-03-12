@@ -3,32 +3,34 @@
 #include <sstream>
 #include <chrono>
 #include <ctime>
-#include <async/box.h>
+#include <async/consummer_thread.h>
 
 enum class Action {
   SayHello,
   Count
 };
 
-using ActionEvent = async_declare_event_family<Action>;
+using ActionEvent = async::event_family<Action>;
 
-async_declare_event(ActionEvent, Action::SayHello) {
-  event(std::string&& name) : base(Action::SayHello), name(name) {}
+async_event(ActionEvent, Action::SayHello)
+{
+  event(std::string&& name) : super(), name(name) {}
 
   std::string name;
 };
 
-async_declare_event(ActionEvent, Action::Count) {
-  event(int i) : base(Action::Count), i(i) {}
+async_event(ActionEvent, Action::Count)
+{
+  event(int i) : super(), i(i) {}
 
   int i;
 };
 
-class ActionBox : public async::box<ActionEvent>
+class ActionBox : public async::consummer_thread<ActionEvent>
 {
   public :
     int counter = 0;
-    explicit ActionBox(queue_type& queue, std::string name) : box(queue), name_(name) {}
+    explicit ActionBox(queue_type& queue, std::string name) : consummer_thread(queue), name_(name) {}
 
   protected :
     void onStart() override {
@@ -37,7 +39,7 @@ class ActionBox : public async::box<ActionEvent>
     void loop() override
     {
 
-      std::unique_ptr<ActionEvent::base> event(waitEvent());
+      std::unique_ptr<ActionEvent::base_event> event(waitEvent());
       //std::cerr << "[" << name_ << "] - I received event  : " << (int)event.get() << std::endl;
       if(!event) return;
 
@@ -79,9 +81,9 @@ class ActionBox : public async::box<ActionEvent>
 };
 
 
-TEST_CASE("box") {
+TEST_CASE("consummer_thread") {
   std::cerr << std::endl
-            << "==== TEST CASE [box] ===" << std::endl
+            << "==== TEST CASE [consummer_thread] ===" << std::endl
             << std::endl;
 
   std::srand((unsigned)std::time(nullptr));

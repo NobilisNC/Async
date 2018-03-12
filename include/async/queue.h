@@ -10,15 +10,15 @@
 namespace async {
 
 template<typename value_t>
-class queue
+class _queue
 {
     using queue_t = std::queue<value_t>;
 
   public :
     using value_type = value_t;
 
-    queue() = default;
-    ~queue() = default;
+    _queue() = default;
+    ~_queue() = default;
 
     inline bool isEmpty() const {
       std::lock_guard<std::mutex> lguard(queue_mutex_);
@@ -75,10 +75,7 @@ class queue
 };
 
 template<typename T>
-class queue<async_declare_event_family<T>> : public queue<_event<T>*> {};
-
-template<typename T>
-class queue<_event<T>> : public queue<_event<T>*> {};
+using queue = _queue<std::conditional_t<is_event_family_v<T>, typename T::base_event*, T>>;
 
 } /* namespace async */
 

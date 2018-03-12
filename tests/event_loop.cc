@@ -9,16 +9,18 @@ enum class Action {
   Task
 };
 
-using ActionF = async_declare_event_family<Action>;
+using ActionF = async::event_family<Action>;
 
-async_declare_event(ActionF, Action::SayHello) {
-  event(std::string name) : base(Action::SayHello), name_(name) {}
+async_event(ActionF, Action::SayHello)
+{
+  event(std::string name) : super(), name_(name) {}
 
   std::string name_;
 };
 
-async_declare_event(ActionF, Action::Task) {
-  event(std::function<void()> task) : base(Action::Task), task_(task) {}
+async_event(ActionF, Action::Task)
+{
+  event(std::function<void()> task) : super(), task_(task) {}
 
   std::function<void()> task_;
 };
@@ -36,7 +38,7 @@ class Loop : public async::event_loop<ActionF>
 
     void loop() override {
       //std::cerr << "=== Loop ==== " << std::this_thread::get_id() << std::endl;
-      std::unique_ptr<ActionF::base> event(waitEvent());
+      std::unique_ptr<ActionF::base_event> event(waitEvent());
 
       if (!event) return;
 

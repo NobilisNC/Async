@@ -2,82 +2,111 @@
 #define _ASYNC_EVENT_H
 
 #include <type_traits>
+#include <memory>
 
 namespace async {
 
-template<typename Id>
-class _event
-{
-    static_assert(std::is_enum<Id>::value, "ID type must be an enum type");
-
+/** @brief Virtual class to handle event
+ *
+ * @tparam tEnum Enum type
+ */
+template <class tEnum>
+class base_event {
   public :
-    _event(Id id) : id_(id) {}
-    virtual ~_event() = 0;
+    // Assertions
+    static_assert(std::is_enum_v<tEnum>, "Async event must be specialized with en enum type");
 
-    inline const Id& id() const { return id_; }
+    // Using directive
+    using enum_type = tEnum;
+
+    // Ctor & Dtor
+    explicit base_event(tEnum value)
+            : id_(value) {}
+    virtual ~base_event() = 0;
+
+
+    inline enum_type id() const { return id_; }
 
   private :
-    Id id_;
+    enum_type id_;
 };
 
-template<typename Id>
-_event<Id>::~_event() {}
+template<class tEnum>
+base_event<tEnum>::~base_event() {}
 
 
-#define async_declare_event(family, enum_v) template<> template<> \
-  struct family::event< enum_v > : public family::base
 
+#define ASYNC_EVENT_FAMILY_BODY(tEnum) \
+template<tEnum> struct event {}; \
+\
+template<tEnum vEnum> using event_type = event<vEnum>;\
+\
+template<tEnum vEnum> constexpr static auto cast(base_event* event) {\
+    return static_cast<event_type<vEnum>*>(event);\
+}\
+\
+template<tEnum vEnum>\
+static constexpr auto cast(std::unique_ptr<base_event>& event) {\
+    return cast<vEnum>(event.get());\
+}
+
+/** @brief Class to declare a family event
+ *
+ * This class allows the declaration of an event family
+ *
+ * @tparam tEnum Enum type
+ */
+template<class tEnum>
+struct event_family
+{
+    using base_event = async::base_event<tEnum>;
+    using enum_type = typename base_event::enum_type;
+
+
+    ASYNC_EVENT_FAMILY_BODY(tEnum)
+
+  protected:
+
+    template<tEnum vEnum>
+    struct super : public base_event {
+      constexpr static tEnum enum_value = vEnum;
+
+      super() : base_event(vEnum) {}
+      virtual ~super() = 0;
+    };
+};
+
+template<class tEnum>
+template<tEnum vEnum>
+event_family<tEnum>::super<vEnum>::~super() {}
+
+
+#define async_declare_event_family(tEnum) \
+struct : public async::event_family<tEnum> { \
+    ASYNC_EVENT_FAMILY_BODY(tEnum) \
+};
+
+#define async_event(tFamily, vEnum) template<> template<> struct tFamily::event<vEnum> : public tFamily::super<vEnum>
+
+/* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
+/* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
+/* *** *** *** *** *** *** *** *** *** *** *** *** *** TYPE TRAITS ** *** *** *** *** *** *** *** *** *** *** *** *** */
+/* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
+/* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
+
+template<class, typename = void>
+struct is_event_family : public std::false_type
+{};
+
+template<class T>
+struct is_event_family<T, std::void_t<typename T::enum_type, typename T::base_event>>  : public std::true_type
+{};
+
+template<class T>
+inline constexpr bool is_event_family_v = is_event_family<T>::value;
 
 } /* namespace async */
 
-template<typename T>
-struct async_declare_event_family {
-    /* Type of enum */
-    using enum_t = T;
-    static_assert(std::is_enum<enum_t>::value, "ID type for Async::Event must be an enum type");
 
-    /* base event */
-    using base = async::_event<T>;
-    /* base event ptr */
-    using base_ptr = async::_event<T>*;
-
-    /* template to specialize */
-    template<T>
-    struct event {};
-
-    /* cast */
-    template<T value_t>
-    constexpr static auto cast(base_ptr val) {
-      return static_cast<event<value_t>* >(val);
-    }
-
-    template<T value_t>
-    constexpr static auto cast(std::unique_ptr<base>& val) {
-      return static_cast<event<value_t>* >(val.get());
-    }
-};
-
-template<typename T>
-struct async_get_event_type { //Default any type
-    using type = async::_event<T>;
-    using enum_type =  T;
-};
-
-template<typename T>
-struct async_get_event_type<async::_event<T>> { // event_type
-    using type = async::_event<T>;
-    using enum_type = T;
-};
-
-template<typename T>
-struct async_get_event_type<async_declare_event_family<T>> { // async_declare_event_family
-    using type = async::_event<T>;
-    using enum_type =  T;
-};
-
-template<typename T>
-struct async_get_enum_type { // async_declare_event_family
-    using type = typename async_get_event_type<T>::type;
-};
 
 #endif
