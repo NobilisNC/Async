@@ -23,11 +23,20 @@ class thread
       thread_.reset(new std::thread(&thread::loop_, this));
     }
 
+    virtual void notifyStop() {
+      need_to_stop_ = true;
+    }
+
     virtual void stop() {
       if(thread_) {
           need_to_stop_ = true;
           thread_->join();
         }
+    }
+
+    inline bool isJoinable() const {
+      if (!thread_) return false;
+      return thread_->joinable();
     }
 
     inline bool isRunning() const { return is_running_; }

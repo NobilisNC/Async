@@ -20,11 +20,9 @@ class pool
     }
     ~pool() {
         for(auto& thread : threads_) {
-          thread->stop();
+            thread->stop();
+            delete thread;
         }
-      for(auto& thread : threads_) {
-        delete thread;
-      }
     }
 
     pool(const pool&) = delete;
@@ -45,7 +43,6 @@ class pool
 
     void remove(size_type number = 1) {
       for(size_type i = 0; i < number; ++i) {
-        threads_.front()->stop();
         delete threads_.front();
       }
       threads_.erase(threads_.begin(), threads_.begin() + number);

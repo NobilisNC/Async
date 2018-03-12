@@ -63,6 +63,7 @@ class MyThread : public async::consummer_thread<FAction>
     }
     void loop() final {
       std::unique_ptr<FAction::base_event> event(waitEvent());
+      if (!event) return;
 
       if(event->id() == Action::Prime)
       {
@@ -95,12 +96,13 @@ TEST_CASE("pool test", "[pool]") {
   pool.add("Thread1");
   pool.add("Thread2");
   pool.add("Thread3");
-  //pool.add("Thread4");
+  pool.add("Thread4");
+  pool.add("Thread5");
 
-  pool.push(new FAction::event<Action::Prime>(100));
-  pool.push(new FAction::event<Action::Prime>(1000));
-  pool.push(new FAction::event<Action::Prime>(100));
-  pool.push(new FAction::event<Action::Prime>(100));
+  pool.push(new FAction::event<Action::Prime>(10000));
+  pool.push(new FAction::event<Action::Prime>(10000));
+  pool.push(new FAction::event<Action::Prime>(100000));
+  pool.push(new FAction::event<Action::Prime>(100000));
   pool.push(new FAction::event<Action::Prime>(100));
   pool.push(new FAction::event<Action::Prime>(100));
   pool.push(new FAction::event<Action::Prime>(100000));
@@ -108,4 +110,3 @@ TEST_CASE("pool test", "[pool]") {
 
   while(!pool.queue().isEmpty()) {}
 }
-

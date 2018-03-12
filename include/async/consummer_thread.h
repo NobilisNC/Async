@@ -18,7 +18,11 @@ class consummer_thread : public thread
     ~consummer_thread() = default;
 
     void stop() override {
-      queue_.condition_variable().notify_all();
+      notifyStop();
+      do {
+        queue_.condition_variable().notify_all();
+      } while(!isJoinable());
+
       thread::stop();
     }
 
