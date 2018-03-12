@@ -4,12 +4,13 @@ project(tests VERSION 1.0.0 LANGUAGES CXX)
 add_executable(
   main_tests
     main.cc
-    general_tests.cc
-    signal_tests.cc
-    event_tests.cc
-    box_tests.cc
-    event_loop.cc
-    sequence_loop_tests.cc
+    #general_tests.cc
+    #signal_tests.cc
+    #event_tests.cc
+    #box_tests.cc
+    #event_loop.cc
+    #sequence_loop_tests.cc
+    pool_tests.cc
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
