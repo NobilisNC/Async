@@ -15,9 +15,7 @@ class pool
     using event_type = typename queue_type::value_type;
     using size_type = std::size_t;
 
-    pool() {
-
-    }
+    pool() = default;
     ~pool() {
       for(auto& thread : threads_) {
         thread->stop();
