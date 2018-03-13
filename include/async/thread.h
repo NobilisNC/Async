@@ -29,9 +29,9 @@ class thread
 
     virtual void stop() {
       if(thread_) {
-          need_to_stop_ = true;
-          thread_->join();
-        }
+        need_to_stop_ = true;
+        thread_->join();
+      }
     }
 
     inline bool isJoinable() const {

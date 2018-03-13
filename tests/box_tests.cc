@@ -14,8 +14,8 @@ using TEST = async_dev::register_family<Test>;
 
 
 enum class Action {
-  SayHello,
-  Count
+    SayHello,
+    Count
 };
 
 using ActionEvent = async_declare_event_family(Action);
@@ -52,12 +52,12 @@ class ActionBox : public async::consummer_thread<ActionEvent>
       if(!event) return;
 
       if (event->id() == Action::SayHello) {
-          auto action = ActionEvent::cast<Action::SayHello>(event.get());
-          sayHello(*action);
-        } else if(event->id() == Action::Count) {
-          auto action = ActionEvent::cast<Action::Count>(event.get());
-          count(*action);
-        }
+        auto action = ActionEvent::cast<Action::SayHello>(event.get());
+        sayHello(*action);
+      } else if(event->id() == Action::Count) {
+        auto action = ActionEvent::cast<Action::Count>(event.get());
+        count(*action);
+      }
 
 
     }
@@ -75,9 +75,9 @@ class ActionBox : public async::consummer_thread<ActionEvent>
     void count(const ActionEvent::event<Action::Count>& action) {
       std::stringstream ss;
       for ( int i = 0; i < action.i; i++) {
-          ss << i << ", ";
-          counter++;
-        }
+        ss << i << ", ";
+        counter++;
+      }
 
       //std::cerr << "[" << name_ << "] - Counting until" << ss.str() << std::endl;
     }
@@ -106,10 +106,10 @@ TEST_CASE("consummer_thread") {
   box2.start();
 
   for (int i = 0 ; i < 5; ++i) {
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-      queue.push(new ActionEvent::event<Action::SayHello>("You shoud see that 5 times {" + std::to_string(i+1) + "}"));
-      queue.push(new ActionEvent::event<Action::Count>(10));
-    }
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    queue.push(new ActionEvent::event<Action::SayHello>("You shoud see that 5 times {" + std::to_string(i+1) + "}"));
+    queue.push(new ActionEvent::event<Action::Count>(10));
+  }
 
   box1.stop();
   box2.stop();

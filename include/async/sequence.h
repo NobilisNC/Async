@@ -20,10 +20,10 @@ class sequence : public event_loop<T>
       waiting_for_ = enum_v;
 
       do {
-          event = event_loop<T>::waitEvent();
-          if(thread::needtoStop()) return nullptr;
-          if(!event) continue;
-        } while(event->id() != enum_v);
+        event = event_loop<T>::waitEvent();
+        if(thread::needtoStop()) return nullptr;
+        if(!event) continue;
+      } while(event->id() != enum_v);
 
       return event;
     }

@@ -53,8 +53,8 @@ class _queue
     }
 
     inline void clear() {
-        std::lock_guard<std::mutex> lguard(queue_mutex_);
-        queue_ = {};
+      std::lock_guard<std::mutex> lguard(queue_mutex_);
+      queue_ = {};
     }
 
     value_t pop() {

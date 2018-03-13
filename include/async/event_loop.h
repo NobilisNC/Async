@@ -24,7 +24,7 @@ class event_loop : public consummer_thread<T>
     }
 
     inline void clear() {
-        queue_.clear();
+      queue_.clear();
     }
 
     inline const queue_type& queue() const { return queue_; }

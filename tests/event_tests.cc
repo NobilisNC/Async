@@ -4,10 +4,10 @@
 
 
 enum class Direction {
-  Up,
-  Right,
-  Down,
-  Left
+    Up,
+    Right,
+    Down,
+    Left
 };
 
 using EventDirection = async_declare_event_family(Direction);
@@ -66,9 +66,9 @@ TEST_CASE("Event test", "[events]") {
 
     int i = -1;
     if(b->id() == Direction::Down) {
-        auto e = EventDirection::cast<Direction::Down>(b);
-        i = e->data5;
-      }
+      auto e = EventDirection::cast<Direction::Down>(b);
+      i = e->data5;
+    }
 
     REQUIRE(i == 10);
   }

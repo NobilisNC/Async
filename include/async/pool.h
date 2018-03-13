@@ -16,13 +16,13 @@ class pool
     using size_type = std::size_t;
 
     pool(size_type number_of_threads = 0) {
-          //add(number_of_threads);
+      //add(number_of_threads);
     }
     ~pool() {
-        for(auto& thread : threads_) {
-            thread->stop();
-            delete thread;
-        }
+      for(auto& thread : threads_) {
+        thread->stop();
+        delete thread;
+      }
     }
 
     pool(const pool&) = delete;
@@ -52,7 +52,7 @@ class pool
 
     inline void push(event_type&& event) {queue_.push(event); }
     inline void clear() {
-        queue_.clear();
+      queue_.clear();
     }
     inline const queue_type& queue() const { return queue_; }
 
