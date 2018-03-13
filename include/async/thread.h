@@ -11,6 +11,8 @@ class thread
 {
   public:
     thread() : need_to_stop_(false) {}
+    thread(const thread&) = delete;
+    thread& operator =(const thread&) = delete;
 
     virtual ~thread() {
       need_to_stop_ = true;
