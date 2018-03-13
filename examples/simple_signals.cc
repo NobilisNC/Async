@@ -4,31 +4,31 @@
 #include <string>
 
 struct Ui {
-    async::signal<void()> onBegin;
-    async::signal<void()> onEnd;
+  async::signal<void()> onBegin;
+  async::signal<void()> onEnd;
 
-    async::signal<void()> onHello;
-    async::signal<void(const std::string&)> onError;
+  async::signal<void()> onHello;
+  async::signal<void(const std::string&)> onError;
 
-    void loop() {
-      std::string command;
+  void loop() {
+    std::string command;
 
-      // Call signal
-      onBegin();
+    // Call signal
+    onBegin();
 
-      do {
-        std::cin >> command;
+    do {
+      std::cin >> command;
 
-        if (command == "hello") {
-            onHello();
-         } else if(command != "exit" ) {
-            onError(command);
-         }
+      if (command == "hello") {
+        onHello();
+      } else if(command != "exit" ) {
+        onError(command);
+      }
 
-      } while (command != "exit");
+    } while (command != "exit");
 
-      onEnd();
-    }
+    onEnd();
+  }
 };
 
 
@@ -52,29 +52,29 @@ int main() {
   People Max{"Max"};
   People James{"James"};
 
-   Ui ui;
+  Ui ui;
 
-   ui.onBegin.connect(displayHelp);
-   ui.onBegin += []() {
-       std::cerr << "Hey !" << std::endl;
-     };
+  ui.onBegin.connect(displayHelp);
+  ui.onBegin += []() {
+    std::cerr << "Hey !" << std::endl;
+  };
 
-   ui.onEnd += [](){
-       std::cerr << "=== GOODBYE ===" << std::endl;
-    };
+  ui.onEnd += [](){
+    std::cerr << "=== GOODBYE ===" << std::endl;
+  };
 
-   ui.onError += explainError;
-
-
-
-   ui.onHello.connect([&](){
-       Max.sayHello();
-     });
-   ui.onHello +=[&]() {
-       James.sayHello();
-     };
+  ui.onError += explainError;
 
 
-   ui.loop();
-   return 0;
+
+  ui.onHello.connect([&](){
+    Max.sayHello();
+  });
+  ui.onHello +=[&]() {
+    James.sayHello();
+  };
+
+
+  ui.loop();
+  return 0;
 }
