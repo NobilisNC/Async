@@ -9,7 +9,7 @@ enum class Action {
   Task
 };
 
-using ActionF = async::event_family<Action>;
+using ActionF = async_declare_event_family(Action);
 
 async_event(ActionF, Action::SayHello)
 {

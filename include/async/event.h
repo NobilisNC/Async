@@ -41,7 +41,7 @@ template<tEnum> struct event {}; \
 \
 template<tEnum vEnum> using event_type = event<vEnum>;\
 \
-template<tEnum vEnum> constexpr static auto cast(base_event* event) {\
+template<tEnum vEnum> constexpr static event_type<vEnum>* cast(base_event* event) {\
     return static_cast<event_type<vEnum>*>(event);\
 }\
 \
@@ -84,10 +84,9 @@ event_family<tEnum>::super<vEnum>::~super() {}
 #define async_declare_event_family(tEnum) \
 struct : public async::event_family<tEnum> { \
     ASYNC_EVENT_FAMILY_BODY(tEnum) \
-};
+}
 
-#define async_event(tFamily, vEnum) template<> template<> struct tFamily::event<vEnum> : public tFamily::super<vEnum>
-
+#define async_event(tFamily, vEnum) template<> struct tFamily::template event<vEnum> : public tFamily::super<vEnum>
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** TYPE TRAITS ** *** *** *** *** *** *** *** *** *** *** *** *** */

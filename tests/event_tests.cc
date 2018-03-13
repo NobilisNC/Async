@@ -10,7 +10,7 @@ enum class Direction {
   Left
 };
 
-using EventDirection = async::event_family<Direction>;
+using EventDirection = async_declare_event_family(Direction);
 
 async_event(EventDirection, Direction::Up)
 {

@@ -18,7 +18,7 @@ enum class Action {
   Count
 };
 
-using ActionEvent = async::event_family<Action>;
+using ActionEvent = async_declare_event_family(Action);
 
 async_event(ActionEvent, Action::SayHello)
 {

@@ -8,22 +8,23 @@ enum class enum1 {
 };
 
 
-using Fenum1 = async_declare_event_family(enum1)
+using Fenum1 = async_declare_event_family(enum1);
 
-async_event(Fenum1, enum1::a) {
+async_event (Fenum1, enum1::a) {
   char c;
   event(char c) : super(), c(c) {}
 };
 
-async_event(Fenum1, enum1::b) {
+async_event (Fenum1, enum1::b) {
   char c;
   event(char c) : super(), c(c) {}
 };
 
-async_event(Fenum1, enum1::c) {
+async_event (Fenum1, enum1::c) {
   char c;
   event(char c) : super(), c(c) {}
 };
+
 
 
 }

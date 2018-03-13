@@ -13,6 +13,6 @@ if( BUILD_TESTS )
 endif()
 
 
-if( BUILD_EXAMPLES )
+#if( BUILD_EXAMPLES )
   add_subdirectory(examples)
-endif()
+#endif()

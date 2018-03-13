@@ -27,4 +27,10 @@ target_link_libraries(
       async
 )
 
+target_compile_features(
+    main_tests
+    PUBLIC
+        cxx_std_17
+)
+
 add_test(NAME tests::main COMMAND main_tests)

@@ -10,7 +10,7 @@ void SieveOfEratosthenes(int n, std::vector<int>& primes)
   // Create a boolean array "prime[0..n]" and initialize
   // all entries it as true. A value in prime[i] will
   // finally be false if i is Not a prime, else true.
-  bool prime[n+1];
+  bool* prime = new bool[n+1];
   memset(prime, true, sizeof(prime));
 
   for (int p=2; p*p<=n; p++)
@@ -28,6 +28,8 @@ void SieveOfEratosthenes(int n, std::vector<int>& primes)
   for (int p=2; p<=n; p++)
     if (prime[p])
       primes.push_back(p);
+
+  delete[] prime;
 }
 
 
@@ -35,7 +37,7 @@ enum class Action {
     Prime
 };
 
-using FAction = async_declare_event_family(Action)
+using FAction = async_declare_event_family(Action);
 
 async_event(FAction, Action::Prime)
 {
