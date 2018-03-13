@@ -62,11 +62,7 @@ struct event_family
     using base_event = async::base_event<tEnum>;
     using enum_type = typename base_event::enum_type;
 
-
-    ASYNC_EVENT_FAMILY_BODY(tEnum)
-
   protected:
-
     template<tEnum vEnum>
     struct super : public base_event {
       constexpr static tEnum enum_value = vEnum;
@@ -86,7 +82,8 @@ struct : public async::event_family<tEnum> { \
     ASYNC_EVENT_FAMILY_BODY(tEnum) \
 }
 
-#define async_event(tFamily, vEnum) template<> struct tFamily::template event<vEnum> : public tFamily::super<vEnum>
+#define async_event(tFamily, vEnum) template<> struct tFamily::event<vEnum> : public tFamily::super<vEnum>
+
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** ** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** TYPE TRAITS ** *** *** *** *** *** *** *** *** *** *** *** *** */
