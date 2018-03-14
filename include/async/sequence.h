@@ -11,6 +11,8 @@ class sequence : public event_loop<T>
   public:
     using enum_type  = typename T::enum_type;
     using event_type = typename event_loop<T>::event_type;
+    template<enum_type vEnum>
+    using e = typename T::template event<vEnum>;
 
     inline enum_type isWaitingFor() const { return waiting_for_; }
 
@@ -26,6 +28,11 @@ class sequence : public event_loop<T>
       } while(event->id() != enum_v);
 
       return event;
+    }
+
+    template<enum_type vEnum>
+    e<vEnum>* waitFor(e<vEnum>* = nullptr) {
+        return T::cast<vEnum>(waitFor(vEnum));
     }
 
     virtual void execute() = 0;

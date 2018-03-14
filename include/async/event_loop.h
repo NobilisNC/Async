@@ -12,6 +12,7 @@ class event_loop : public consummer_thread<T>
     using queue_type = typename consummer_thread<T>::queue_type;
     using event_type = typename consummer_thread<T>::event_type;
 
+
     event_loop() : consummer_thread<T>(queue_) {}
 
 
