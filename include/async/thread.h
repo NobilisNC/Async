@@ -58,8 +58,6 @@ class thread
     std::unique_ptr<std::thread> thread_;
     std::atomic<bool> need_to_stop_;
     std::atomic<bool> is_running_;
-
-
 };
 
 } /* namespace async */
